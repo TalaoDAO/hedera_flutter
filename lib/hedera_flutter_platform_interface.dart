@@ -23,7 +23,10 @@ abstract class HederaFlutterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Future<Map> createAccount({
+    required String accountId,
+    required String privateKey,
+  }) async {
+    throw UnimplementedError('startBeacon() has not been implemented.');
   }
 }

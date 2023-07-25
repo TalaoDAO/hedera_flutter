@@ -1,8 +1,15 @@
-
 import 'hedera_flutter_platform_interface.dart';
 
+/// Provide Hedera API for both Android and iOS.
 class HederaFlutter {
-  Future<String?> getPlatformVersion() {
-    return HederaFlutterPlatform.instance.getPlatformVersion();
+  /// create Hedera Account
+  Future<Map> createAccount({
+    required String accountId,
+    required String privateKey,
+  }) async {
+    return await HederaFlutterPlatform.instance.createAccount(
+      accountId: accountId,
+      privateKey: privateKey,
+    );
   }
 }

@@ -6,22 +6,5 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelHederaFlutter platform = MethodChannelHederaFlutter();
-  const MethodChannel channel = MethodChannel('hedera_flutter');
-
-  setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-      channel,
-      (MethodCall methodCall) async {
-        return '42';
-      },
-    );
-  });
-
-  tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
-  });
-
-  test('getPlatformVersion', () async {
-    expect(await platform.getPlatformVersion(), '42');
-  });
+  const MethodChannel channel = MethodChannel('hederaMethod');
 }
