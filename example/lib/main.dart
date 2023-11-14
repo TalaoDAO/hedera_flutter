@@ -16,8 +16,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String accountId = '';
+  String id = '';
   String balance = '';
+  String error = '';
 
   final _hederaFlutterPlugin = HederaFlutter();
 
@@ -35,9 +36,21 @@ class _MyAppState extends State<MyApp> {
         accountId: accountId,
         privateKey: privateKey,
       );
-      print(value);
+
+      if (value['success']) {
+        setState(() {
+          id = value['id'];
+          balance = value['balance'];
+        });
+      } else {
+        setState(() {
+          error = value.toString();
+        });
+      }
     } catch (e) {
-      print(e);
+      setState(() {
+        error = e.toString();
+      });
     }
   }
 
@@ -53,13 +66,15 @@ class _MyAppState extends State<MyApp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 30),
-              Text('Account Id: $accountId\n'),
+              Text('Account Id: $id\n'),
               Text('Balance: $balance\n'),
               const SizedBox(height: 10),
               OutlinedButton(
                 onPressed: () => createAccount(),
                 child: const Text("Create Account"),
               ),
+              const SizedBox(height: 10),
+              Text('Error: $error\n'),
             ],
           ),
         ),

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import android.util.Log;
 
+import com.hedera.hashgraph.sdk.AccountBalance;
+import com.hedera.hashgraph.sdk.AccountBalanceQuery;
 import com.hedera.hashgraph.sdk.AccountCreateTransaction;
 import com.hedera.hashgraph.sdk.AccountId;
 import com.hedera.hashgraph.sdk.Client;
@@ -57,18 +59,22 @@ public class HederaFlutterPlugin implements FlutterPlugin, MethodCallHandler {
             PrivateKey myPrivateKey = PrivateKey.fromString(privateKey);
 
             //Create your Hedera Testnet client
-            Client client = Client.forName("testnet");
+            Client client = Client.forTestnet();
+            //Client client = Client.forName("testnet");
 
             // Defaults the operator account ID and key such that all generated transactions will be paid for
             // by this account and be signed by this key
             client.setOperator(myAccountId, myPrivateKey);
 
+            // Set default max transaction fee & max query payment
+            client.setDefaultMaxTransactionFee(new Hbar(100));
+            client.setMaxQueryPayment(new Hbar(50));
+
             // Generate a Ed25519 private, public key pair
             PrivateKey newAccountPrivateKey = PrivateKey.generateED25519();
             PublicKey newAccountPublicKey = newAccountPrivateKey.getPublicKey();
 
-
-            Log.i(tag, "\nprivate ke: " + newAccountPrivateKey);
+            Log.i(tag, "\nprivate key: " + newAccountPrivateKey);
             Log.i(tag, "\npublic key: " + newAccountPublicKey);
 
             //Create new account and assign the public key
@@ -79,22 +85,33 @@ public class HederaFlutterPlugin implements FlutterPlugin, MethodCallHandler {
                     .execute(client);
 
             // This will wait for the receipt to become available
-            TransactionReceipt receipt = transactionResponse.getReceipt(client);
+            TransactionReceipt receipt = transactionResponse.getReceipt(client); 
+
+            Log.i(tag, "\nreceipt " + receipt);
 
             AccountId newAccountId = receipt.accountId;
 
             Log.i(tag, "\nNew account ID: " + newAccountId);
 
-             Map<String, Object> mapData = new HashMap<>();
-             mapData.put("message", true);
-             mapData.put("id", newAccountId);
-             result.success(mapData);
+            //Check the new account's balance
+            AccountBalance accountBalance = new AccountBalanceQuery()
+                    .setAccountId(newAccountId)
+                    .execute(client);
+
+            Log.i(tag, "\nNew account balance: " + accountBalance);
+
+            Map<String, Object> mapData = new HashMap<>();
+            mapData.put("message", true);
+            mapData.put("id", newAccountId);
+            mapData.put("balance", accountBalance);
+            result.success(mapData);
 
         } catch (Exception e) {
             Map<String, Object> mapData = new HashMap<>();
             mapData.put("message", e.toString());
             mapData.put("success", false);
-            result.success(mapData);
+            result.success(mapData);  
+            Log.i(tag, "\nError: " + e);
         }
     }
 
