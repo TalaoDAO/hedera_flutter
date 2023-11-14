@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hedera_flutter/hedera_flutter.dart';
 
@@ -28,14 +27,18 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> createAccount() async {
-    await dotenv.load();
-    final accountId = dotenv.get('MY_ACCOUNT_ID');
-    final privateKey = dotenv.get('MY_PRIVATE_KEY');
-    final value = await _hederaFlutterPlugin.createAccount(
-      accountId: accountId,
-      privateKey: privateKey,
-    );
-    print(value);
+    try {
+      await dotenv.load();
+      final accountId = dotenv.get('MY_ACCOUNT_ID');
+      final privateKey = dotenv.get('MY_PRIVATE_KEY');
+      final value = await _hederaFlutterPlugin.createAccount(
+        accountId: accountId,
+        privateKey: privateKey,
+      );
+      print(value);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
