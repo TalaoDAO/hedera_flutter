@@ -18,6 +18,8 @@ import com.hedera.hashgraph.sdk.TransactionResponse;
 import com.hedera.hashgraph.sdk.PublicKey;
 import com.hedera.hashgraph.sdk.Hbar;
 
+import org.json.JSONObject;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -101,11 +103,14 @@ public class HederaFlutterPlugin implements FlutterPlugin, MethodCallHandler {
             Log.i(tag, "\nNew account balance: " + accountBalance);
 
             Map<String, Object> mapData = new HashMap<>();
-            mapData.put("message", true);
-            mapData.put("id", newAccountId);
-            mapData.put("balance", accountBalance);
-            result.success(mapData);
-
+            mapData.put("success", true);
+            mapData.put("id", newAccountId.toString());
+            mapData.put("balance", accountBalance.hbars.toString());
+            Log.i(tag, "\nMap: " + mapData);
+            JSONObject json = new JSONObject(mapData);
+            String jsonData = json.toString();
+            Log.i(tag, "\nData for flutter: " + jsonData);
+            result.success(jsonData);
         } catch (Exception e) {
             Map<String, Object> mapData = new HashMap<>();
             mapData.put("message", e.toString());

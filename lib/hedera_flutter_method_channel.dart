@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -18,7 +20,9 @@ class MethodChannelHederaFlutter extends HederaFlutterPlatform {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent("accountId", () => accountId);
     args.putIfAbsent("privateKey", () => privateKey);
-    Map data = await methodChannel.invokeMethod('createAccount', args);
-    return data;
+    final data = await methodChannel.invokeMethod('createAccount', args);
+
+    Map<String, dynamic> resultMap = data is String ? json.decode(data) : data;
+    return resultMap;
   }
 }
