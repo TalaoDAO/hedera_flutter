@@ -27,6 +27,13 @@ abstract class HederaFlutterPlatform extends PlatformInterface {
     required String accountId,
     required String privateKey,
   }) async {
-    throw UnimplementedError('startBeacon() has not been implemented.');
+    throw UnimplementedError('createAccount() has not been implemented.');
+  }
+
+  Future<Map> transferCrypto({
+    required String accountId,
+    required String privateKey,
+  }) async {
+    throw UnimplementedError('transferCrypto() has not been implemented.');
   }
 }

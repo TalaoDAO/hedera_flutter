@@ -18,6 +18,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String id = '';
   String balance = '';
+  String status = '';
+  String cost = '';
   String error = '';
 
   final _hederaFlutterPlugin = HederaFlutter();
@@ -54,6 +56,35 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> transferCrypto() async {
+    try {
+      await dotenv.load();
+      final accountId = dotenv.get('MY_ACCOUNT_ID');
+      final privateKey = dotenv.get('MY_PRIVATE_KEY');
+      final value = await _hederaFlutterPlugin.transferCrypto(
+        accountId: accountId,
+        privateKey: privateKey,
+      );
+
+      if (value['success']) {
+        setState(() {
+          id = value['id'];
+          status = value['status'];
+          balance = value['balance'];
+          cost = value['cost'];
+        });
+      } else {
+        setState(() {
+          error = value.toString();
+        });
+      }
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -72,6 +103,14 @@ class _MyAppState extends State<MyApp> {
               OutlinedButton(
                 onPressed: () => createAccount(),
                 child: const Text("Create Account"),
+              ),
+              const SizedBox(height: 10),
+              Text('Cost: $cost\n'),
+              Text('Status: $status\n'),
+              const SizedBox(height: 10),
+              OutlinedButton(
+                onPressed: () => transferCrypto(),
+                child: const Text("Transfer Crypto"),
               ),
               const SizedBox(height: 10),
               Text('Error: $error\n'),

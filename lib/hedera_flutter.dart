@@ -12,4 +12,15 @@ class HederaFlutter {
       privateKey: privateKey,
     );
   }
+
+  /// transfer Crypto
+  Future<Map> transferCrypto({
+    required String accountId,
+    required String privateKey,
+  }) async {
+    return await HederaFlutterPlatform.instance.transferCrypto(
+      accountId: accountId,
+      privateKey: privateKey,
+    );
+  }
 }
