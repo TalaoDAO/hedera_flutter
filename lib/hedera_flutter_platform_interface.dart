@@ -30,6 +30,14 @@ abstract class HederaFlutterPlatform extends PlatformInterface {
     throw UnimplementedError('createAccount() has not been implemented.');
   }
 
+  Future<Map> createAccountWithAlias({
+    required String accountId,
+    required String privateKey,
+  }) async {
+    throw UnimplementedError(
+        'createAccountWithAlias() has not been implemented.');
+  }
+
   Future<Map> transferCrypto({
     required String accountId,
     required String privateKey,

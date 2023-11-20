@@ -26,6 +26,22 @@ class MethodChannelHederaFlutter extends HederaFlutterPlatform {
     return resultMap;
   }
 
+  /// create Hedera Account With Alias
+  @override
+  Future<Map> createAccountWithAlias({
+    required String accountId,
+    required String privateKey,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent("accountId", () => accountId);
+    args.putIfAbsent("privateKey", () => privateKey);
+    final data =
+        await methodChannel.invokeMethod('createAccountWithAlias', args);
+
+    Map<String, dynamic> resultMap = data is String ? json.decode(data) : data;
+    return resultMap;
+  }
+
   /// transfer Crypto
   @override
   Future<Map> transferCrypto({

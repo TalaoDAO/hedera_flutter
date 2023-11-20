@@ -18,6 +18,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String id = '';
   String balance = '';
+  String secretKey = '';
+  String alias = '';
   String status = '';
   String cost = '';
   String error = '';
@@ -43,6 +45,34 @@ class _MyAppState extends State<MyApp> {
         setState(() {
           id = value['id'];
           balance = value['balance'];
+        });
+      } else {
+        setState(() {
+          error = value.toString();
+        });
+      }
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+      });
+    }
+  }
+
+  Future<void> createAccountWithAlias() async {
+    try {
+      await dotenv.load();
+      final accountId = dotenv.get('MY_ACCOUNT_ID');
+      final privateKey = dotenv.get('MY_PRIVATE_KEY');
+      final value = await _hederaFlutterPlugin.createAccountWithAlias(
+        accountId: accountId,
+        privateKey: privateKey,
+      );
+
+      if (value['success']) {
+        setState(() {
+          id = value['id'];
+          alias = value['alias'];
+          secretKey = value['privateKey'];
         });
       } else {
         setState(() {
@@ -103,6 +133,13 @@ class _MyAppState extends State<MyApp> {
               OutlinedButton(
                 onPressed: () => createAccount(),
                 child: const Text("Create Account"),
+              ),
+              const SizedBox(height: 10),
+              Text('PrivateKey: $secretKey\n'),
+              Text('Alias: $alias\n'),
+              OutlinedButton(
+                onPressed: () => createAccountWithAlias(),
+                child: const Text("Create Account With Alias"),
               ),
               const SizedBox(height: 10),
               Text('Cost: $cost\n'),

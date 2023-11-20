@@ -13,6 +13,17 @@ class HederaFlutter {
     );
   }
 
+  /// create Hedera Account With Alias
+  Future<Map> createAccountWithAlias({
+    required String accountId,
+    required String privateKey,
+  }) async {
+    return await HederaFlutterPlatform.instance.createAccountWithAlias(
+      accountId: accountId,
+      privateKey: privateKey,
+    );
+  }
+
   /// transfer Crypto
   Future<Map> transferCrypto({
     required String accountId,
