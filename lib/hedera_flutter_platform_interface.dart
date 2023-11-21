@@ -26,6 +26,7 @@ abstract class HederaFlutterPlatform extends PlatformInterface {
   Future<Map> createAccount({
     required String accountId,
     required String privateKey,
+    required String network,
   }) async {
     throw UnimplementedError('createAccount() has not been implemented.');
   }
@@ -33,15 +34,34 @@ abstract class HederaFlutterPlatform extends PlatformInterface {
   Future<Map> createAccountWithAlias({
     required String accountId,
     required String privateKey,
+    required String network,
   }) async {
     throw UnimplementedError(
         'createAccountWithAlias() has not been implemented.');
   }
 
-  Future<Map> transferCrypto({
+  Future<Map> createAccountWithMnemonics({
     required String accountId,
     required String privateKey,
+    required String network,
+    required String mnemonicsString,
   }) async {
-    throw UnimplementedError('transferCrypto() has not been implemented.');
+    throw UnimplementedError(
+        'createAccountWithMnemonics() has not been implemented.');
+  }
+
+  Future<Map> queryBalance({
+    required String accountId,
+    required String network,
+  }) async {
+    throw UnimplementedError('queryBalance() has not been implemented.');
+  }
+
+  Future<Map> transferHbar({
+    required String accountId,
+    required String privateKey,
+    required String network,
+  }) async {
+    throw UnimplementedError('transferHbar() has not been implemented.');
   }
 }

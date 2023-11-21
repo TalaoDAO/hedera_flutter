@@ -16,141 +16,154 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String id = '';
-  String balance = '';
-  String secretKey = '';
-  String alias = '';
-  String status = '';
-  String cost = '';
-  String error = '';
+  String accId = '';
+  String value = '';
 
   final _hederaFlutterPlugin = HederaFlutter();
 
   @override
   void initState() {
+    getEnvData();
     super.initState();
   }
 
-  Future<void> createAccount() async {
-    try {
-      await dotenv.load();
-      final accountId = dotenv.get('MY_ACCOUNT_ID');
-      final privateKey = dotenv.get('MY_PRIVATE_KEY');
-      final value = await _hederaFlutterPlugin.createAccount(
-        accountId: accountId,
-        privateKey: privateKey,
-      );
+  String accountId = '';
+  String privateKey = '';
 
-      if (value['success']) {
-        setState(() {
-          id = value['id'];
-          balance = value['balance'];
-        });
-      } else {
-        setState(() {
-          error = value.toString();
-        });
-      }
-    } catch (e) {
-      setState(() {
-        error = e.toString();
-      });
-    }
+  getEnvData() async {
+    await dotenv.load();
+    accountId = dotenv.get('MY_ACCOUNT_ID');
+    privateKey = dotenv.get('MY_PRIVATE_KEY');
   }
 
-  Future<void> createAccountWithAlias() async {
-    try {
-      await dotenv.load();
-      final accountId = dotenv.get('MY_ACCOUNT_ID');
-      final privateKey = dotenv.get('MY_PRIVATE_KEY');
-      final value = await _hederaFlutterPlugin.createAccountWithAlias(
-        accountId: accountId,
-        privateKey: privateKey,
-      );
-
-      if (value['success']) {
-        setState(() {
-          id = value['id'];
-          alias = value['alias'];
-          secretKey = value['privateKey'];
-        });
-      } else {
-        setState(() {
-          error = value.toString();
-        });
-      }
-    } catch (e) {
-      setState(() {
-        error = e.toString();
-      });
-    }
-  }
-
-  Future<void> transferCrypto() async {
-    try {
-      await dotenv.load();
-      final accountId = dotenv.get('MY_ACCOUNT_ID');
-      final privateKey = dotenv.get('MY_PRIVATE_KEY');
-      final value = await _hederaFlutterPlugin.transferCrypto(
-        accountId: accountId,
-        privateKey: privateKey,
-      );
-
-      if (value['success']) {
-        setState(() {
-          id = value['id'];
-          status = value['status'];
-          balance = value['balance'];
-          cost = value['cost'];
-        });
-      } else {
-        setState(() {
-          error = value.toString();
-        });
-      }
-    } catch (e) {
-      setState(() {
-        error = e.toString();
-      });
-    }
-  }
+  // testnet mainnet previewnet
+  final network = 'testnet';
+  final mnemonicsString =
+      "engage element country comfort chase oxygen biology rescue network produce seat imitate ketchup still security analyst shoulder board album require shuffle argue decorate language";
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Hedera example app'),
+          title: const Text('Hedera Example app'),
         ),
         body: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 30),
-              Text('Account Id: $id\n'),
-              Text('Balance: $balance\n'),
-              const SizedBox(height: 10),
+              Text('Network: $network'),
+              const SizedBox(height: 5),
+              Text('Account Id: $accId'),
+              const SizedBox(height: 30),
+
+              /// create Account
               OutlinedButton(
-                onPressed: () => createAccount(),
+                onPressed: () async {
+                  try {
+                    setState(() => value = 'Loading...');
+                    final data = await _hederaFlutterPlugin.createAccount(
+                        accountId: accountId,
+                        privateKey: privateKey,
+                        network: network);
+                    setState(() {
+                      accId = data['accountId'];
+                      value = data.toString();
+                    });
+                  } catch (e) {
+                    setState(() => value = e.toString());
+                  }
+                },
                 child: const Text("Create Account"),
               ),
-              const SizedBox(height: 10),
-              Text('PrivateKey: $secretKey\n'),
-              Text('Alias: $alias\n'),
+
+              /// create Account With Alias
               OutlinedButton(
-                onPressed: () => createAccountWithAlias(),
+                onPressed: () async {
+                  try {
+                    setState(() => value = 'Loading...');
+                    final data =
+                        await _hederaFlutterPlugin.createAccountWithAlias(
+                            accountId: accountId,
+                            privateKey: privateKey,
+                            network: network);
+                    setState(() {
+                      accId = data['accountId'];
+                      value = data.toString();
+                    });
+                  } catch (e) {
+                    setState(() => value = e.toString());
+                  }
+                },
                 child: const Text("Create Account With Alias"),
               ),
-              const SizedBox(height: 10),
-              Text('Cost: $cost\n'),
-              Text('Status: $status\n'),
-              const SizedBox(height: 10),
+
+              /// create Account With Mnemonics
               OutlinedButton(
-                onPressed: () => transferCrypto(),
-                child: const Text("Transfer Crypto"),
+                onPressed: () async {
+                  try {
+                    setState(() => value = 'Loading...');
+
+                    final data =
+                        await _hederaFlutterPlugin.createAccountWithMnemonics(
+                      accountId: accountId,
+                      privateKey: privateKey,
+                      network: network,
+                      mnemonicsString: mnemonicsString,
+                    );
+                    setState(() {
+                      accId = data['accountId'];
+                      value = data.toString();
+                    });
+                  } catch (e) {
+                    setState(() => value = e.toString());
+                  }
+                },
+                child: const Text("Create Account With Mnemonics"),
               ),
-              const SizedBox(height: 10),
-              Text('Error: $error\n'),
+
+              /// transfer Crypto
+              OutlinedButton(
+                onPressed: () async {
+                  try {
+                    setState(() => value = 'Loading...');
+                    final data = await _hederaFlutterPlugin.queryBalance(
+                        accountId: accId, network: network);
+                    setState(() => value = data.toString());
+                  } catch (e) {
+                    setState(() => value = e.toString());
+                  }
+                },
+                child: const Text("Query Balance"),
+              ),
+
+              /// transfer Crypto
+              OutlinedButton(
+                onPressed: () async {
+                  try {
+                    setState(() => value = 'Loading...');
+                    final data = await _hederaFlutterPlugin.transferHbar(
+                        accountId: accountId,
+                        privateKey: privateKey,
+                        network: network);
+                    setState(() => value = data.toString());
+                  } catch (e) {
+                    setState(() => value = e.toString());
+                  }
+                },
+                child: const Text("Transfer Hbar"),
+              ),
+              const SizedBox(height: 5),
+              const Divider(),
+              const SizedBox(height: 5),
+              SizedBox(
+                width: double.infinity,
+                child: SelectableText(
+                  value,
+                  textAlign: TextAlign.left,
+                ),
+              ),
             ],
           ),
         ),
