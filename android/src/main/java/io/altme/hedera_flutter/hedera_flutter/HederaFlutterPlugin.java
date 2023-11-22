@@ -54,6 +54,12 @@ public class HederaFlutterPlugin implements FlutterPlugin, MethodCallHandler {
                 final String network = call.argument("network");
                 AccountService.transferHbar(accountId, privateKey, network, result);
             }
+            case "transferToken" -> {
+                final String accountId = call.argument("accountId");
+                final String privateKey = call.argument("privateKey");
+                final String network = call.argument("network");
+                TokenService.transferToken(accountId, privateKey, network, result);
+            }
             default -> result.notImplemented();
         }
     }

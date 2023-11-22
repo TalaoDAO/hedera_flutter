@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
                 child: const Text("Create Account With Mnemonics"),
               ),
 
-              /// transfer Crypto
+              /// check balance
               OutlinedButton(
                 onPressed: () async {
                   try {
@@ -153,6 +153,23 @@ class _MyAppState extends State<MyApp> {
                   }
                 },
                 child: const Text("Transfer Hbar"),
+              ),
+
+              /// transfer token
+              OutlinedButton(
+                onPressed: () async {
+                  try {
+                    setState(() => value = 'Loading...');
+                    final data = await _hederaFlutterPlugin.transferToken(
+                        accountId: accountId,
+                        privateKey: privateKey,
+                        network: network);
+                    setState(() => value = data.toString());
+                  } catch (e) {
+                    setState(() => value = e.toString());
+                  }
+                },
+                child: const Text("Transfer Token"),
               ),
               const SizedBox(height: 5),
               const Divider(),

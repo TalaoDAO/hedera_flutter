@@ -66,4 +66,17 @@ class HederaFlutter {
       network: network,
     );
   }
+
+  /// transfer token
+  Future<Map> transferToken({
+    required String accountId,
+    required String privateKey,
+    required String network,
+  }) async {
+    return await HederaFlutterPlatform.instance.transferToken(
+      accountId: accountId,
+      privateKey: privateKey,
+      network: network,
+    );
+  }
 }

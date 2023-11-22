@@ -97,4 +97,21 @@ class MethodChannelHederaFlutter extends HederaFlutterPlatform {
     Map<String, dynamic> resultMap = data is String ? json.decode(data) : data;
     return resultMap;
   }
+
+  /// transfer token
+  @override
+  Future<Map> transferToken({
+    required String accountId,
+    required String privateKey,
+    required String network,
+  }) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent("accountId", () => accountId);
+    args.putIfAbsent("privateKey", () => privateKey);
+    args.putIfAbsent("network", () => network);
+    final data = await methodChannel.invokeMethod('transferToken', args);
+
+    Map<String, dynamic> resultMap = data is String ? json.decode(data) : data;
+    return resultMap;
+  }
 }

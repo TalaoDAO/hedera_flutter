@@ -64,4 +64,12 @@ abstract class HederaFlutterPlatform extends PlatformInterface {
   }) async {
     throw UnimplementedError('transferHbar() has not been implemented.');
   }
+
+  Future<Map> transferToken({
+    required String accountId,
+    required String privateKey,
+    required String network,
+  }) async {
+    throw UnimplementedError('transferToken() has not been implemented.');
+  }
 }
