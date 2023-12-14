@@ -3,15 +3,15 @@ import UIKit
 
 public class HederaFlutterPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "hederaMethod", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: "hedera_flutter", binaryMessenger: registrar.messenger())
     let instance = HederaFlutterPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
-    case "createAccount":
-        HederaChannelHandler.shared.createAccount(call: call, result: result)
+    case "getPlatformVersion":
+      result("iOS " + UIDevice.current.systemVersion)
     default:
       result(FlutterMethodNotImplemented)
     }
